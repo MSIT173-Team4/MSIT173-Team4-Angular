@@ -1,14 +1,29 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { NearbyPlace } from './FoodMap/nearby-place/nearby-place';
-
+import {
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet
+} from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NearbyPlace],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('MSI173Team4Angular');
+  readonly isMobileNavigationOpen = signal(false);
+
+  constructor(router: Router) {
+    router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => this.isMobileNavigationOpen.set(false));
+  }
+
+  toggleMobileNavigation(): void {
+    this.isMobileNavigationOpen.update((isOpen) => !isOpen);
+  }
 }

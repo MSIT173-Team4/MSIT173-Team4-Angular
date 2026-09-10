@@ -1,0 +1,45 @@
+<section class="pantry-shell p-4 md:p-8">
+  <div class="data-notice" role="status"><i class="pi pi-info-circle"></i> {{ dataNotice() }}</div>
+  <p-tag value="零剩食永續生活" severity="success" [rounded]="true" />
+  <h1>智慧清冰箱</h1>
+  <p class="subtitle">盤點您的食材庫存，依即期食材配對最適合的料理。</p>
+
+  <div class="pantry-grid">
+    <article>
+      <div class="section-heading">
+        <h2><i class="pi pi-box"></i> 虛擬冰箱庫存</h2>
+        <p-button label="新增食材" icon="pi pi-plus" size="small" severity="danger" [rounded]="true" />
+      </div>
+      @for (item of pantryItems(); track item.pantryId) {
+        <div class="pantry-item" [class.urgent]="item.daysLeft <= 3">
+          <div>
+            <b>{{ item.ingredientName }}</b>
+            <small>
+              {{ item.storageLocation }}．剩餘 {{ item.daysLeft }} 天．{{ item.amount }} {{ item.unit }}
+            </small>
+          </div>
+          <p-button
+            icon="pi pi-check"
+            ariaLabel="標記已使用"
+            severity="secondary"
+            [rounded]="true"
+            (onClick)="removeItem(item.pantryId)"
+          />
+        </div>
+      } @empty {
+        <p>冰箱清單已清空。</p>
+      }
+    </article>
+
+    <article class="recommendation">
+      <p-tag value="食材吻合度 90%" severity="success" [rounded]="true" />
+      <h2>菠菜豆腐清湯</h2>
+      <p>優先消耗剩餘一天的菠菜與剩餘兩天的板豆腐，十五分鐘快速完成。</p>
+      <div class="match-details">
+        <span><i class="pi pi-check-circle"></i> 已有：菠菜、板豆腐</span>
+        <span><i class="pi pi-shopping-cart"></i> 缺少：雞蛋</span>
+      </div>
+      <p-button label="查看推薦食譜" icon="pi pi-arrow-right" iconPos="right" routerLink="/recipes/6" severity="danger" [rounded]="true" />
+    </article>
+  </div>
+</section>
