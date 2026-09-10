@@ -5,7 +5,7 @@ import { NearbyPlace } from './FoodMap/nearby-place/nearby-place';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NearbyPlace],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

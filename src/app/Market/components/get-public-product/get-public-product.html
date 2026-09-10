@@ -1,0 +1,19 @@
+<div class="product-list">
+  @for (product of products(); track product.productId) {
+  <div class="product-card">
+
+    <div class="product-image">
+      @if (product.imageUrls && product.imageUrls.length > 0) {
+      <img [src]="product.imageUrls[0]" [alt]="product.productName" />
+      } @else {
+      <div>無圖片</div>
+      }
+    </div>
+
+    <p class="product-name">{{ product.productName }}</p>
+    <p class="product-brand">{{ product.brandOrOrigin }}</p>
+    <p class="product-price">NT$ {{ product.price }}</p>
+
+  </div>
+  }
+</div>

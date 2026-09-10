@@ -13,4 +13,8 @@ export class ProductService {
   createProduct(formData: FormData) {
     return this.http.post(this.apiUrl, formData);
   }
+
+  getPublicProducts(page: number = 1) {
+    return this.http.get<any[]>(`${this.apiUrl}/public?page=${page}`);
+  }
 }
