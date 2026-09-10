@@ -1,3 +1,4 @@
+import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter } from '@angular/router';
 import { MOCK_PANTRY_ITEMS } from '../mock-recipe.data';
@@ -12,6 +13,7 @@ describe('SmartPantry', () => {
     await TestBed.configureTestingModule({
       imports: [SmartPantry],
       providers: [
+        provideHttpClient(),
         provideRouter([]),
         {
           provide: ActivatedRoute,

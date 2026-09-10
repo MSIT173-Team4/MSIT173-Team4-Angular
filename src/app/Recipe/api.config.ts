@@ -15,6 +15,8 @@ export const apiConfig = {
   },
   pantry: {
     listByUser: (userId: number) => `${friendlyFoodApiBaseUrl}/recipe/pantry/user/${userId}`,
+    diagnoseImage: `${friendlyFoodApiBaseUrl}/pantry/diagnose-image`,
+    addItem: `${friendlyFoodApiBaseUrl}/pantry/add-item`,
     create: `${friendlyFoodApiBaseUrl}/recipe/pantry`,
     update: (pantryId: number) => `${friendlyFoodApiBaseUrl}/recipe/pantry/${pantryId}`,
     delete: (pantryId: number) => `${friendlyFoodApiBaseUrl}/recipe/pantry/${pantryId}`
