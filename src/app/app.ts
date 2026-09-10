@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { NearbyPlace } from './pages/nearby-place/nearby-place';
+import { NearbyPlace } from './FoodMap/nearby-place/nearby-place';
+
 
 @Component({
   selector: 'app-root',
