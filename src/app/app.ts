@@ -1,9 +1,10 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { NearbyPlace } from './pages/nearby-place/nearby-place';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, NearbyPlace],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
