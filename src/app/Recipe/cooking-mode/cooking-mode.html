@@ -1,0 +1,84 @@
+<p-toast />
+
+<section class="cooking-shell p-4 md:p-8">
+  <a routerLink="/recipes" class="back-link">
+    <i class="pi pi-arrow-left" aria-hidden="true"></i>
+    離開料理模式
+  </a>
+
+  <p class="voice-hint">
+    語音導引已啟用，可說「下一步」、「開始計時」或「完成料理」。
+  </p>
+
+  <h1>{{ recipeTitle() }}</h1>
+
+  <p-progressbar
+    [value]="progress()"
+    [showValue]="false"
+    aria-label="料理進度"
+  />
+
+  @if (currentStep(); as step) {
+    <article class="step-card">
+      <span class="step-indicator">
+        步驟 {{ step.stepNumber }}／{{ steps().length }}
+      </span>
+
+      <h2>{{ step.instruction }}</h2>
+
+      @if (step.imageUrl) {
+        <img
+          [src]="step.imageUrl"
+          [alt]="'料理步驟 ' + step.stepNumber + ' 示意圖'"
+        />
+      }
+
+      <div class="timer" aria-live="polite">
+        {{ formatTime(remainingSeconds()) }}
+      </div>
+
+      <div class="actions">
+        <p-button
+          label="上一步"
+          icon="pi pi-chevron-left"
+          severity="secondary"
+          [outlined]="true"
+          [disabled]="currentStepIndex() === 0"
+          (onClick)="previousStep()"
+        />
+
+        <p-button
+          [label]="isTimerRunning() ? '暫停計時' : '開始計時'"
+          [icon]="isTimerRunning() ? 'pi pi-pause' : 'pi pi-play'"
+          severity="success"
+          [rounded]="true"
+          [disabled]="remainingSeconds() === 0"
+          (onClick)="toggleTimer()"
+        />
+
+        <p-button
+          label="下一步"
+          icon="pi pi-chevron-right"
+          iconPos="right"
+          severity="secondary"
+          [outlined]="true"
+          [disabled]="currentStepIndex() === steps().length - 1"
+          (onClick)="nextStep()"
+        />
+      </div>
+    </article>
+  } @else {
+    <p class="empty-state">料理步驟載入中……</p>
+  }
+
+  <p-button
+    label="完成料理並同步冰箱"
+    icon="pi pi-check-circle"
+    severity="danger"
+    size="large"
+    [rounded]="true"
+    [loading]="isDeducting()"
+    [disabled]="steps().length === 0"
+    (onClick)="completeCooking()"
+  />
+</section>

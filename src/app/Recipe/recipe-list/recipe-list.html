@@ -1,0 +1,76 @@
+<section class="page-shell p-4 md:p-8">
+  @if (isUsingMockData()) {
+    <div class="data-notice" role="status">
+      <i class="pi pi-info-circle"></i>
+      <span>{{ dataNotice() }}</span>
+      <p-tag value="Mock 模式" severity="warn" [rounded]="true" />
+    </div>
+  }
+
+  <div class="hero">
+    <div>
+      <p-tag value="本週熱門　減碳料理認證" severity="success" [rounded]="true" />
+      <h1>今天，想為冰箱煮一頓什麼？</h1>
+      <p>以現有食材發現剛好的美味，減少浪費也保留生活的餘裕。</p>
+      <div class="hero-meta">
+        <span><i class="pi pi-clock"></i> 快速料理提案</span>
+        <span><i class="pi pi-sparkles"></i> AI 協作食譜</span>
+        <span><i class="pi pi-heart"></i> 永續飲食</span>
+      </div>
+    </div>
+    <p-button label="智慧清冰箱" icon="pi pi-box" severity="success" routerLink="/pantry" [rounded]="true" />
+  </div>
+
+  <div class="pantry-callout">
+    <i class="pi pi-sparkles"></i>
+    <div>
+      <b>冰箱有剩餘食材不知道煮什麼？</b>
+      <span>盤點即期食材，優先推薦最適合今天完成的美味料理。</span>
+    </div>
+    <a routerLink="/pantry">立即配對 <i class="pi pi-arrow-right"></i></a>
+  </div>
+
+  <div class="category-row" aria-label="食譜分類篩選">
+    <span><i class="pi pi-filter"></i> 探索分類</span>
+    <button type="button">全部</button>
+    <button type="button">家常菜</button>
+    <button type="button">異國料理</button>
+    <button type="button">烘焙</button>
+    <button type="button">15 分鐘內</button>
+    <button type="button">高蛋白低卡</button>
+  </div>
+
+  <div class="recipe-grid">
+    @for (recipe of recipes(); track recipe.recipeId) {
+      <p-card styleClass="recipe-card">
+        <ng-template #header>
+          <div class="cover-frame">
+            <img class="cover" [src]="recipe.coverImageUrl" [alt]="recipe.title" />
+            @if (recipe.isAiGenerated) {
+              <p-tag class="cover-tag" value="AI 協作" severity="info" [rounded]="true" />
+            }
+          </div>
+        </ng-template>
+        <ng-template #title>{{ recipe.title }}</ng-template>
+        <p class="description">{{ recipe.description }}</p>
+        <div class="metadata">
+          <span><i class="pi pi-clock"></i> {{ recipe.cookingMinutes }} 分鐘</span>
+          <span><i class="pi pi-heart"></i> {{ recipe.likes }}</span>
+          <span><i class="pi pi-bolt"></i> {{ recipe.totalCalories }} kcal</span>
+        </div>
+        <ng-template #footer>
+          <p-button
+            label="查看料理詳情"
+            icon="pi pi-arrow-right"
+            iconPos="right"
+            [routerLink]="['/recipes', recipe.recipeId]"
+            severity="danger"
+            [rounded]="true"
+          />
+        </ng-template>
+      </p-card>
+    } @empty {
+      <p class="state">目前尚無可顯示的公開食譜。</p>
+    }
+  </div>
+</section>

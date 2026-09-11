@@ -1,0 +1,44 @@
+<section class="detail-shell p-4 md:p-8">
+  @if (isUsingMockData()) {
+    <div class="data-notice" role="status"><i class="pi pi-info-circle"></i> {{ dataNotice() }}</div>
+  }
+
+  @if (recipe(); as recipe) {
+    <a routerLink="/recipes" class="back"><i class="pi pi-arrow-left"></i> 回到食譜探索</a>
+    <div class="hero-image" [style.background-image]="'linear-gradient(0deg, rgba(38,24,20,.82), transparent), url(' + recipe.coverImageUrl + ')'">
+      <div>
+        <p-tag value="精選食譜" severity="danger" [rounded]="true" />
+        <h1>{{ recipe.title }}</h1>
+        <p>{{ recipe.description }}</p>
+        <span><i class="pi pi-clock"></i> {{ recipe.cookingMinutes }} 分鐘　<i class="pi pi-users"></i> {{ recipe.defaultServings }} 人份　<i class="pi pi-bolt"></i> {{ recipe.totalCalories }} kcal</span>
+      </div>
+    </div>
+
+    <div class="detail-grid">
+      <aside>
+        <h2>準備食材</h2>
+        @for (ingredient of recipe.ingredients; track ingredient.ingredientId) {
+          <div class="ingredient">
+            <span>{{ ingredient.name }}</span>
+            <b>{{ ingredient.displayAmount }}</b>
+          </div>
+        }
+      </aside>
+      <article>
+        <h2>料理步驟</h2>
+        @for (step of recipe.steps; track step.stepNumber) {
+          <div class="instruction">
+            <strong>{{ step.stepNumber }}</strong>
+            <div>
+              <p>{{ step.instruction }}</p>
+              @if (step.timerSeconds > 0) {
+                <small><i class="pi pi-clock"></i> 建議計時 {{ step.timerSeconds }} 秒</small>
+              }
+            </div>
+          </div>
+        }
+        <p-button label="開始專注料理模式" icon="pi pi-compass" [routerLink]="['/cooking-mode', recipe.recipeId]" severity="danger" size="large" [rounded]="true" />
+      </article>
+    </div>
+  }
+</section>

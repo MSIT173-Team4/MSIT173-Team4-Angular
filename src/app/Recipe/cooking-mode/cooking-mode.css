@@ -1,0 +1,100 @@
+:host {
+  display: block;
+}
+
+.cooking-shell {
+  min-height: calc(100vh - 8rem);
+  color: #fff8f6;
+  text-align: center;
+  background: radial-gradient(circle at top, #594139, #150c09 65%);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ffdbd0;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: #ffffff;
+}
+
+.voice-hint {
+  margin-top: 2rem;
+  color: #c1eebc;
+  font-size: 0.85rem;
+}
+
+.cooking-shell h1 {
+  margin: 1rem 0 1.5rem;
+  font-size: clamp(2rem, 5vw, 4rem);
+}
+
+.step-card {
+  max-width: 780px;
+  margin: 2rem auto;
+  padding: clamp(1.5rem, 5vw, 4rem);
+  border: 1px solid #8d7168;
+  border-radius: 2rem;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.2);
+}
+
+.step-indicator {
+  color: #ffb59d;
+  font-weight: 700;
+}
+
+.step-card h2 {
+  font-size: clamp(1.4rem, 3vw, 2.25rem);
+  line-height: 1.6;
+}
+
+.step-card img {
+  width: 100%;
+  max-height: 280px;
+  object-fit: cover;
+  border-radius: 1rem;
+}
+
+.timer {
+  margin: 2rem 0;
+  color: #c1eebc;
+  font: 700 clamp(3rem, 9vw, 6rem) / 1 monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.empty-state {
+  margin: 5rem 0;
+  color: #ffdbd0;
+}
+
+:host ::ng-deep .p-progressbar {
+  max-width: 780px;
+  height: 0.5rem;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .step-card {
+    border-radius: 1.25rem;
+  }
+
+  .actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .actions p-button {
+    width: 100%;
+  }
+}

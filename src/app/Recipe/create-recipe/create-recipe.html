@@ -1,0 +1,66 @@
+<section class="editor-shell p-4 md:p-8">
+  <a routerLink="/recipes" class="back"><i class="pi pi-arrow-left"></i> 回到食譜探索</a>
+
+  <header>
+    <div>
+      <span class="eyebrow"><i class="pi pi-sparkles"></i> AI 協作食譜編輯器</span>
+      <h1>建立分享食譜</h1>
+      <p>先完成核心欄位，後續可接上 SmartBot.Api 自動解析食材與步驟。</p>
+    </div>
+    <p-button label="儲存草稿" icon="pi pi-save" severity="secondary" [outlined]="true" [disabled]="!canSubmit()" (onClick)="saveDraft()" />
+  </header>
+
+  @if (statusMessage()) {
+    <p-message severity="info">{{ statusMessage() }}</p-message>
+  }
+
+  <div class="editor-grid">
+    <p-card header="食譜基本資訊">
+      <div class="form-grid">
+        <label>
+          <span>食譜名稱</span>
+          <input pInputText type="text" [ngModel]="title()" (ngModelChange)="title.set($event)" />
+        </label>
+        <label>
+          <span>食譜簡介</span>
+          <textarea pTextarea rows="4" [ngModel]="description()" (ngModelChange)="description.set($event)"></textarea>
+        </label>
+        <div class="two-columns">
+          <label>
+            <span>基準份量</span>
+            <p-inputnumber [ngModel]="servings()" (ngModelChange)="servings.set($event ?? 1)" [min]="1" [max]="20" suffix=" 人份" />
+          </label>
+          <label>
+            <span>料理時間</span>
+            <p-inputnumber [ngModel]="cookingMinutes()" (ngModelChange)="cookingMinutes.set($event ?? 0)" [min]="0" suffix=" 分鐘" />
+          </label>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card header="封面與影片">
+      <div class="upload-placeholder">
+        <i class="pi pi-image"></i>
+        <strong>拖曳封面圖片至此</strong>
+        <span>目前為 UI 測試區，檔案上傳 API 尚未接線。</span>
+        <p-button label="選擇圖片" icon="pi pi-upload" severity="secondary" [outlined]="true" />
+      </div>
+      <label class="youtube-field">
+        <span>YouTube 網址</span>
+        <input pInputText type="url" placeholder="https://www.youtube.com/watch?v=..." />
+      </label>
+    </p-card>
+
+    <p-card header="食材清單">
+      <p class="helper">每行輸入一項食材，之後可交由 RecipeParserPrompt 轉成標準化資料。</p>
+      <textarea pTextarea rows="9" [ngModel]="ingredientDraft()" (ngModelChange)="ingredientDraft.set($event)"></textarea>
+      <p-button label="使用 AI 標準化食材" icon="pi pi-sparkles" severity="success" [outlined]="true" />
+    </p-card>
+
+    <p-card header="料理步驟">
+      <p class="helper">依實際操作順序編號，計時與步驟圖片會在下一階段加入。</p>
+      <textarea pTextarea rows="9" [ngModel]="instructionDraft()" (ngModelChange)="instructionDraft.set($event)"></textarea>
+      <p-button label="使用 AI 拆解步驟" icon="pi pi-sparkles" severity="success" [outlined]="true" />
+    </p-card>
+  </div>
+</section>
