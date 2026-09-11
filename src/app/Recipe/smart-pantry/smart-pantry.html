@@ -1,0 +1,206 @@
+<p-toast />
+
+<section class="pantry-shell p-4 md:p-8">
+  <div class="data-notice" role="status">
+    <i class="pi pi-info-circle" aria-hidden="true"></i>
+    {{ dataNotice() }}
+  </div>
+
+  <p-tag value="零剩食永續生活" severity="success" [rounded]="true" />
+  <h1>智慧清冰箱</h1>
+  <p class="subtitle">盤點您的食材庫存，依即期食材配對最適合的料理。</p>
+
+  <div class="pantry-grid">
+    <article>
+      <div class="section-heading">
+        <h2><i class="pi pi-box" aria-hidden="true"></i> 虛擬冰箱庫存</h2>
+        <p-button
+          label="拍照新增"
+          icon="pi pi-camera"
+          size="small"
+          severity="warn"
+          [rounded]="true"
+          (onClick)="openCameraDialog()"
+        />
+      </div>
+
+      @for (item of pantryItems(); track item.pantryId) {
+        <div class="pantry-item" [class.urgent]="item.daysLeft <= 3">
+          <div>
+            <b>{{ item.ingredientName }}</b>
+            <small>
+              {{ item.storageLocation }}．剩餘 {{ item.daysLeft }} 天．{{ item.amount }}
+              {{ item.unit }}
+            </small>
+          </div>
+          <p-button
+            icon="pi pi-check"
+            ariaLabel="標記已使用"
+            severity="secondary"
+            [rounded]="true"
+            (onClick)="removeItem(item.pantryId)"
+          />
+        </div>
+      } @empty {
+        <p>冰箱清單已清空。</p>
+      }
+    </article>
+
+    <article class="recommendation">
+      <p-tag value="食材吻合度 90%" severity="success" [rounded]="true" />
+      <h2>菠菜豆腐清湯</h2>
+      <p>優先消耗剩餘一天的菠菜與剩餘兩天的板豆腐，十五分鐘快速完成。</p>
+      <div class="match-details">
+        <span><i class="pi pi-check-circle" aria-hidden="true"></i> 已有：菠菜、板豆腐</span>
+        <span><i class="pi pi-shopping-cart" aria-hidden="true"></i> 缺少：雞蛋</span>
+      </div>
+      <p-button
+        label="查看推薦食譜"
+        icon="pi pi-arrow-right"
+        iconPos="right"
+        routerLink="/recipes/6"
+        severity="danger"
+        [rounded]="true"
+      />
+    </article>
+  </div>
+</section>
+
+<p-dialog
+  header="拍照新增食材"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: 'min(92vw, 720px)' }"
+  [visible]="dialogVisible()"
+  (visibleChange)="dialogVisible.set($event)"
+  (onHide)="closeCameraDialog()"
+>
+  <div class="diagnostic-dialog">
+    <input
+      #imageInput
+      class="visually-hidden"
+      type="file"
+      accept="image/jpeg,image/png,image/webp"
+      capture="environment"
+      (change)="onFileSelected($event)"
+    />
+
+    <div class="photo-panel">
+      @if (previewUrl(); as imageUrl) {
+        <img [src]="imageUrl" alt="待診斷的食材照片預覽" />
+      } @else {
+        <div class="photo-placeholder">
+          <i class="pi pi-camera" aria-hidden="true"></i>
+          <span>選擇或拍攝一張清楚的單一食材照片</span>
+        </div>
+      }
+
+      <p-button
+        label="選擇照片"
+        icon="pi pi-camera"
+        severity="secondary"
+        [outlined]="true"
+        (onClick)="imageInput.click()"
+      />
+    </div>
+
+    @if (isAnalyzing()) {
+      <div class="analysis-state" role="status" aria-live="polite">
+        <p-progressSpinner strokeWidth="5" ariaLabel="AI 分析中" />
+        <strong>AI 主廚正在分析食材新鮮度...</strong>
+        <span>照片只能協助判讀外觀，仍請以氣味、觸感與保存紀錄確認安全性。</span>
+      </div>
+    }
+
+    @if (diagnostic(); as result) {
+      <div class="diagnostic-result">
+        <div class="freshness-summary">
+          <span>外觀診斷</span>
+          <strong>{{ result.freshnessStatus }}</strong>
+        </div>
+
+        <div class="storage-prescription">
+          <i class="pi pi-sparkles" aria-hidden="true"></i>
+          <div>
+            <span>主廚保鮮處方</span>
+            <strong>{{ result.storageTip }}</strong>
+          </div>
+        </div>
+
+        <div class="pantry-form">
+          <label>
+            <span>食材名稱</span>
+            <input
+              pInputText
+              [ngModel]="pantryForm().ingredientName"
+              (ngModelChange)="updateForm('ingredientName', $event)"
+            />
+          </label>
+
+          <label>
+            <span>數量</span>
+            <p-inputNumber
+              [ngModel]="pantryForm().amount"
+              (ngModelChange)="updateForm('amount', $event ?? 1)"
+              [min]="0.01"
+              [minFractionDigits]="0"
+              [maxFractionDigits]="2"
+            />
+          </label>
+
+          <label>
+            <span>單位</span>
+            <input
+              pInputText
+              [ngModel]="pantryForm().unit"
+              (ngModelChange)="updateForm('unit', $event)"
+            />
+          </label>
+
+          <label>
+            <span>存放溫層</span>
+            <p-select
+              [options]="storageLocations"
+              [ngModel]="pantryForm().storageLocation"
+              (ngModelChange)="updateForm('storageLocation', $event)"
+              appendTo="body"
+            />
+          </label>
+
+          <label>
+            <span>建議過期日</span>
+            <input
+              pInputText
+              type="date"
+              [ngModel]="pantryForm().expirationDate"
+              (ngModelChange)="updateForm('expirationDate', $event)"
+            />
+          </label>
+
+          <label class="full-width">
+            <span>保鮮備註</span>
+            <input
+              pInputText
+              maxlength="150"
+              [ngModel]="pantryForm().note"
+              (ngModelChange)="updateForm('note', $event)"
+            />
+          </label>
+        </div>
+      </div>
+    }
+  </div>
+
+  <ng-template #footer>
+    <p-button label="取消" severity="secondary" [text]="true" (onClick)="closeCameraDialog()" />
+    <p-button
+      label="確認放入冰箱"
+      icon="pi pi-check"
+      severity="success"
+      [loading]="isSaving()"
+      [disabled]="!diagnostic() || isAnalyzing()"
+      (onClick)="confirmPantryItem()"
+    />
+  </ng-template>
+</p-dialog>
